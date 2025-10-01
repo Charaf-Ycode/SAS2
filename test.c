@@ -39,10 +39,10 @@ void creer_un_profil()
     clients.ClientID = 1;
     printf("Saisie Votre Nom:");
     fgets(clients.nom, MX, stdin);
-    clients.nom[strcspn(clients.nom,"\n")]='0';
+    clients.nom[strcspn(clients.nom, "\n")] = '0';
     printf("Saisie Votre Prenom:");
     fgets(clients.prenom, MX, stdin);
-    clients.prenom[strcspn(clients.prenom,"\n")]='0';
+    clients.prenom[strcspn(clients.prenom, "\n")] = '0';
 
     sprintf(clients.email, "%s.%s@gmail.com", clients.nom, clients.prenom);
     clients.solde = 0;
@@ -50,55 +50,64 @@ void creer_un_profil()
 }
 void consuter_profil()
 {
-if(!profcree){
-    printf("Aucun Profil est cree");
-    return;
-}
-printf("\n==========Votre Profil===========\n");
-printf("Votre Id:%d\n",clients.ClientID);
-printf("Le Nom:%s\n",clients.nom);
-printf("Le Prenom:%s\n",clients.prenom);
-printf("L'email:%s\n",clients.email);
-printf("Le Solde:%fMAD\n",clients.solde);
-
+    if (!profcree)
+    {
+        printf("Aucun Profil est cree");
+        return;
+    }
+    printf("\n==========Votre Profil===========\n");
+    printf("Votre Id:%d\n", clients.ClientID);
+    printf("Le Nom:%s\n", clients.nom);
+    printf("Le Prenom:%s\n", clients.prenom);
+    printf("L'email:%s\n", clients.email);
+    printf("Le Solde:%fMAD\n", clients.solde);
 }
 void modifier_un_profil()
 {
-if(!profcree){
-    printf("Aucun Profil est cree");
-    return;
-}
-printf("Modifier Le Nom:");
-fgets(clients.nom,MX,stdin);
-printf("Modifier Le Prenom");
-fgets(clients.prenom,MX,stdin);
-sprintf(clients.email,"%s.%s@gmail.com",clients.nom,clients.prenom);
-printf("Profil est Modifier\n");
+    if (!profcree)
+    {
+        printf("Aucun Profil est cree");
+        return;
+    }
+    printf("Modifier Le Nom:");
+    fgets(clients.nom, MX, stdin);
+    printf("Modifier Le Prenom");
+    fgets(clients.prenom, MX, stdin);
+    sprintf(clients.email, "%s.%s@gmail.com", clients.nom, clients.prenom);
+    printf("Profil est Modifier\n");
 }
 void consulter_le_solde()
 {
-    if(!profcree){
-    printf("Aucun Profil est cree");
-    return;
-}
-printf("Votre Solde:%.2f",clients.solde);
+    if (!profcree)
+    {
+        printf("Aucun Profil est cree");
+        return;
+    }
+    printf("Votre Solde:%.2f", clients.solde);
 }
 void deposer_le_solde()
 {
-     if(!profcree){
-    printf("Aucun Profil est cree");
-    return;
-}
-float argent;
-printf("Saisie Le Montant A deposer:");
-scanf("%f",&argent);
-getchar();
-clients.solde +=argent;
-printf("Votre Nouveau Solde:%.2fMAD\n",clients.solde);
-    
+    if (!profcree)
+    {
+        printf("Aucun Profil est cree");
+        return;
+    }
+    float argent;
+    printf("Saisie Le Montant A deposer:");
+    scanf("%f", &argent);
+    getchar();
+    clients.solde += argent;
+    printf("Votre Nouveau Solde:%.2fMAD\n", clients.solde);
 }
 void afficher_les_prd()
 {
+    printf("\n==========Catalogue=========\n");
+    for(int i=0;i<MXP;i++){
+        printf("IdProduit:%d/Nom de Produit:%s/Categorie:%s/Prix:%f/Stock:%d\nDescription:%s.\n"
+            ,produits[i].produitID,produits[i].nomp,produits[i].categorie,produits[i].prix,produits[i].stock,produits[i].description);
+
+
+    }
 }
 void tri_les_prd()
 {
