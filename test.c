@@ -29,6 +29,8 @@ produit produits[MXP] = {
     {4, "Souris", "Accessoire", 25.0, 20, "Souris 1000dpi"},
     {5, "Clavier", "Accessoire", 45.0, 12, "Clavier brown switch"}};
 int profcree = 0;
+int total_achat = 0;
+float mt_depense = 0;
 void creer_un_profil()
 {
     if (profcree)
@@ -44,7 +46,7 @@ void creer_un_profil()
     fgets(clients.prenom, MX, stdin);
     clients.prenom[strcspn(clients.prenom, "\n")] = '\0';
 
-    sprintf(clients.email, "%s.%s@gmail.com", clients.nom, clients.prenom);
+    sprintf(clients.email, "%s.%s@client.com", clients.nom, clients.prenom);
     clients.solde = 0;
     profcree = 1;
 }
@@ -73,7 +75,7 @@ void modifier_un_profil()
     fgets(clients.nom, MX, stdin);
     printf("Modifier Le Prenom");
     fgets(clients.prenom, MX, stdin);
-    sprintf(clients.email, "%s.%s@email.com", clients.nom, clients.prenom);
+    sprintf(clients.email, "%s.%s@client.com", clients.nom, clients.prenom);
     printf("Profil est Modifier\n");
 }
 void generer_email()
@@ -83,7 +85,7 @@ void generer_email()
         printf("Aucun Profil est cree");
         return;
     }
-    sprintf(clients.email, "%s.%s@email.com", clients.nom, clients.prenom);
+    sprintf(clients.email, "%s.%s@client.com", clients.nom, clients.prenom);
 }
 void consulter_le_solde()
 {
@@ -113,7 +115,7 @@ void afficher_les_prd()
     printf("\n==========Catalogue=========\n");
     for (int i = 0; i < MXP; i++)
     {
-        printf("======>IdProduit:%d-%s-%s-%.2f-%dDescription:%s.\n", produits[i].produitID, produits[i].nomp, produits[i].categorie, produits[i].prix, produits[i].stock, produits[i].description);
+        printf("======>IdProduit:%d-%s-%s-%.2fMAD-%d Description:%s.\n", produits[i].produitID, produits[i].nomp, produits[i].categorie, produits[i].prix, produits[i].stock, produits[i].description);
     }
 }
 void tri_les_prd()
@@ -122,7 +124,7 @@ void tri_les_prd()
     {
         for (int j = 0; j < MXP - i - 1; j++)
         {
-            if (produits[j].prix > produits[j + 1].prix)
+            if (produits[j].prix < produits[j + 1].prix)
             {
                 produit cmp = produits[j];
                 produits[j] = produits[j + 1];
@@ -130,7 +132,7 @@ void tri_les_prd()
             }
         }
     }
-    printf("Les produits trie par croissant\n");
+    printf("Les produits trie par Decroissant\n");
 }
 void achat_prd()
 {
@@ -139,15 +141,15 @@ void achat_prd()
         printf("Aucun Profil est cree");
         return;
     }
-    int choix;
+    char choix[MX];
     afficher_les_prd();
     printf("Saisie un produit nom:");
-    scanf("%d", &choix);
-    getchar();
-    int trouve;
-    for (int i; i < MXP; i++)
+    fgets(choix, MX, stdin);
+    choix[strcspn(choix, "\n")] = '\0';
+    int trouve = 0;
+    for (int i = 0; i < MXP; i++)
     {
-        if (produits[i].produitID == choix)
+        if (strcasecmp(produits[i].nomp, choix) == 0)
         {
             trouve = 1;
             if (produits[i].stock <= 0)
@@ -157,19 +159,33 @@ void achat_prd()
             }
             if (clients.solde < produits[i].prix)
             {
-                printf("solde insuffisant pour acheter %s votre sold est: %.2f", produits[i].nomp, produits[i].prix);
+                printf("solde insuffisant pour acheter %s votre sold est: %.2f", produits[i].nomp, clients.solde);
                 return;
             }
             clients.solde -= produits[i].prix;
             produits[i].stock--;
+            total_achat++;
+            mt_depense += produits[i].prix;
             printf("Achat Reussi Votre Nouveau Solde est:%.2f", clients.solde);
             return;
         }
     }
     if (!trouve)
     {
-        printf("Produit %d introuvable", &choix);
+        printf("Produit %d introuvable", choix);
     }
+}
+void statistique()
+{
+    if (!profcree)
+    {
+        printf("Aucun Profil est cree");
+        return;
+    }
+    printf("\n=========Statstiques du client=======\n");
+    printf("Nombre d'achats:%d\n", total_achat);
+    printf("Montant total depense:%.2f%MAD", mt_depense);
+    printf("Solde Restant:%.2f", clients.solde);
 }
 int main()
 {
@@ -247,6 +263,10 @@ int main()
         case 4:
             achat_prd();
             break;
+        case 5:
+
+            break;
+
         case 0:
             printf("Au Revoir\n");
             break;
