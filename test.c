@@ -31,13 +31,19 @@ produit produits[MXP] = {
 int profcree = 0;
 int total_achat = 0;
 float mt_depense = 0;
+int aucun_profil()
+{
+    if (!profcree)
+    {
+        printf("Aucun profil est cree\n");
+        return 1;
+    }
+    return 0;
+}
 void creer_un_profil()
 {
-    if (profcree)
-    {
-        printf("Profil Deja cree.\n");
+    if (aucun_profil())
         return;
-    }
     clients.ClientID = 1;
     printf("Saisie Votre Nom:");
     fgets(clients.nom, MX, stdin);
@@ -52,11 +58,8 @@ void creer_un_profil()
 }
 void consuter_profil()
 {
-    if (!profcree)
-    {
-        printf("Aucun Profil est cree\n");
+    if (aucun_profil())
         return;
-    }
     printf("\n==========Votre Profil===========\n");
     printf("Votre Id:%d\n", clients.ClientID);
     printf("Le Nom:%s\n", clients.nom);
@@ -66,11 +69,8 @@ void consuter_profil()
 }
 void modifier_un_profil()
 {
-    if (!profcree)
-    {
-        printf("Aucun Profil est cree\n");
+    if (aucun_profil())
         return;
-    }
     printf("Modifier Le Nom:");
     fgets(clients.nom, MX, stdin);
     clients.nom[strcspn(clients.nom, "\n")] = '\0';
@@ -82,29 +82,20 @@ void modifier_un_profil()
 }
 void generer_email()
 {
-    if (!profcree)
-    {
-        printf("Aucun Profil est cree\n");
+    if (aucun_profil())
         return;
-    }
     sprintf(clients.email, "%s.%s@client.com", clients.nom, clients.prenom);
 }
 void consulter_le_solde()
 {
-    if (!profcree)
-    {
-        printf("Aucun Profil est cree\n");
+    if (aucun_profil())
         return;
-    }
     printf("Votre Solde:%.2f", clients.solde);
 }
 void deposer_le_solde()
 {
-    if (!profcree)
-    {
-        printf("Aucun Profil est cree\n");
+    if (aucun_profil())
         return;
-    }
     float argent;
     printf("Saisie Le Montant A deposer:");
     scanf("%f", &argent);
@@ -138,11 +129,8 @@ void tri_les_prd()
 }
 void achat_prd()
 {
-    if (!profcree)
-    {
-        printf("Aucun Profil est cree\n");
+    if (aucun_profil())
         return;
-    }
     char choix[MX];
     afficher_les_prd();
     printf("Saisie un produit nom:");
@@ -179,11 +167,8 @@ void achat_prd()
 }
 void recherche_par_nom()
 {
-    if (!profcree)
-    {
-        printf("Aucun Profil est cree\n");
+    if (aucun_profil())
         return;
-    }
     char choix[MX];
     afficher_les_prd();
     printf("Saisie un produit nom:");
@@ -206,11 +191,8 @@ void recherche_par_nom()
 }
 void statistique()
 {
-    if (!profcree)
-    {
-        printf("Aucun Profil est cree\n");
+    if (aucun_profil())
         return;
-    }
     printf("\n=========Statstiques du client=======\n");
     printf("Nombre d'achats:%d\n", total_achat);
     printf("Montant total depense:%.2fMAD", mt_depense);
