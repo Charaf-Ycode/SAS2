@@ -39,10 +39,10 @@ void creer_un_profil()
     clients.ClientID = 1;
     printf("Saisie Votre Nom:");
     fgets(clients.nom, MX, stdin);
-    clients.nom[strcspn(clients.nom, "\n")] = '0';
+    clients.nom[strcspn(clients.nom, "\n")] = '\0';
     printf("Saisie Votre Prenom:");
     fgets(clients.prenom, MX, stdin);
-    clients.prenom[strcspn(clients.prenom, "\n")] = '0';
+    clients.prenom[strcspn(clients.prenom, "\n")] = '\0';
 
     sprintf(clients.email, "%s.%s@gmail.com", clients.nom, clients.prenom);
     clients.solde = 0;
@@ -73,8 +73,17 @@ void modifier_un_profil()
     fgets(clients.nom, MX, stdin);
     printf("Modifier Le Prenom");
     fgets(clients.prenom, MX, stdin);
-    sprintf(clients.email, "%s.%s@gmail.com", clients.nom, clients.prenom);
+    sprintf(clients.email, "%s.%s@email.com", clients.nom, clients.prenom);
     printf("Profil est Modifier\n");
+}
+void generer_email()
+{
+    if (!profcree)
+    {
+        printf("Aucun Profil est cree");
+        return;
+    }
+    sprintf(clients.email, "%s.%s@email.com", clients.nom, clients.prenom);
 }
 void consulter_le_solde()
 {
@@ -102,18 +111,65 @@ void deposer_le_solde()
 void afficher_les_prd()
 {
     printf("\n==========Catalogue=========\n");
-    for(int i=0;i<MXP;i++){
-        printf("IdProduit:%d/Nom de Produit:%s/Categorie:%s/Prix:%f/Stock:%d\nDescription:%s.\n"
-            ,produits[i].produitID,produits[i].nomp,produits[i].categorie,produits[i].prix,produits[i].stock,produits[i].description);
-
-
+    for (int i = 0; i < MXP; i++)
+    {
+        printf("======>IdProduit:%d-%s-%s-%.2f-%dDescription:%s.\n", produits[i].produitID, produits[i].nomp, produits[i].categorie, produits[i].prix, produits[i].stock, produits[i].description);
     }
 }
 void tri_les_prd()
 {
+    for (int i = 0; i < MXP - 1; i++)
+    {
+        for (int j = 0; j < MXP - i - 1; j++)
+        {
+            if (produits[j].prix > produits[j + 1].prix)
+            {
+                produit cmp = produits[j];
+                produits[j] = produits[j + 1];
+                produits[j + 1] = cmp;
+            }
+        }
+    }
+    printf("Les produits trie par croissant\n");
 }
 void achat_prd()
 {
+    if (!profcree)
+    {
+        printf("Aucun Profil est cree");
+        return;
+    }
+    int choix;
+    afficher_les_prd();
+    printf("Saisie un produit nom:");
+    scanf("%d", &choix);
+    getchar();
+    int trouve;
+    for (int i; i < MXP; i++)
+    {
+        if (produits[i].produitID == choix)
+        {
+            trouve = 1;
+            if (produits[i].stock <= 0)
+            {
+                printf("le produit %s rupture de stock\n", produits[i].nomp);
+                return;
+            }
+            if (clients.solde < produits[i].prix)
+            {
+                printf("solde insuffisant pour acheter %s votre sold est: %.2f", produits[i].nomp, produits[i].prix);
+                return;
+            }
+            clients.solde -= produits[i].prix;
+            produits[i].stock--;
+            printf("Achat Reussi Votre Nouveau Solde est:%.2f", clients.solde);
+            return;
+        }
+    }
+    if (!trouve)
+    {
+        printf("Produit %d introuvable", &choix);
+    }
 }
 int main()
 {
@@ -151,6 +207,10 @@ int main()
                 break;
             case 3:
                 modifier_un_profil();
+                break;
+            case 4:
+                generer_email();
+                printf("Email:%s\n", clients.email);
                 break;
             default:
                 printf("Choix Invalide\n");
